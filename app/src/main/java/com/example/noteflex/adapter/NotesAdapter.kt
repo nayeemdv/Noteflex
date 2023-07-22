@@ -3,6 +3,7 @@ package com.example.noteflex.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteflex.databinding.ItemsListBinding
 import com.example.noteflex.models.Note
@@ -12,8 +13,7 @@ class NotesAdapter(private val listener: NotesClickListener) :
 
     private val notesList = ArrayList<Note>()
     private val fullList = ArrayList<Note>()
-    private var isSelect =false
-    private var count = 0
+    private val selectedNote = mutableListOf<Note>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
@@ -47,48 +47,64 @@ class NotesAdapter(private val listener: NotesClickListener) :
             }
 
 
-
             cardLayout.setOnClickListener {
-                isSelect = count != 0
-                if (!isSelect){
-                    listener.onItemClicked(notesList[holder.adapterPosition])
-                }else{
-                    transitionItems(it)
+                if (selectedNote.isEmpty()) {
+                    listener.onItemClicked(notesList[holder.adapterPosition], 0)
+                } else {
+                    isSelected(it, currentNotes)
+                    listener.onItemClicked(notesList[holder.adapterPosition], selectedNote.size)
                 }
 
             }
             cardLayout.setOnLongClickListener {
-                transitionItems(it)
-                listener.onItemLongClicked(notesList[holder.adapterPosition])
+                isSelected(it, currentNotes)
+                listener.onItemLongClicked(notesList[holder.adapterPosition], selectedNote.size)
                 true
             }
         }
     }
 
-    private fun transitionItems(view: View) {
-        if (!view.isSelected){
-            view.isSelected = true
-            count++
-        }else{
+    private fun isSelected(view: View, note: Note) {
+        if (selectedNote.contains(note)) {
             view.isSelected = false
-            count--
+            selectedNote.remove(note)
+        } else {
+            view.isSelected = true
+            selectedNote.add(note)
+        }
+    }
+
+    fun getSelectedNotes(): List<Note> {
+        return selectedNote.toList().also {
+            selectedNote.clear()
+            notifyDataSetChanged()
         }
     }
 
 
     fun updateList(newList: List<Note>) {
-        fullList.clear()
-        fullList.addAll(newList)
-
+        val diffResult = DiffUtil.calculateDiff(NotesDiffCallback(notesList, newList))
         notesList.clear()
-        notesList.addAll(fullList)
-        notifyDataSetChanged()
+        notesList.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    private class NotesDiffCallback(
+        private val oldList: List<Note>,
+        private val newList: List<Note>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize() = oldList.size
+        override fun getNewListSize() = newList.size
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldList[oldItemPosition].id == newList[newItemPosition].id
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldList[oldItemPosition] == newList[newItemPosition]
     }
 
 
     fun filterList(search: String) {
         notesList.clear()
-
         for (item in fullList) {
             if (item.title.lowercase().contains(search.lowercase()) || item.note.lowercase()
                     .contains(search.lowercase())
@@ -104,8 +120,8 @@ class NotesAdapter(private val listener: NotesClickListener) :
         RecyclerView.ViewHolder(binding.root)
 
     interface NotesClickListener {
-        fun onItemClicked(note: Note)
-        fun onItemLongClicked(note: Note)
+        fun onItemClicked(note: Note, count: Int)
+        fun onItemLongClicked(note: Note, count: Int)
     }
 
 

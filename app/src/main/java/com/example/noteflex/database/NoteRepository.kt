@@ -11,8 +11,20 @@ class NoteRepository(private val noteDao: NoteDao) {
         noteDao.insert(note)
     }
 
+    suspend fun insertMultipleNotes(selectedNotes: List<Note>) {
+        for (note in selectedNotes) {
+            noteDao.insert(note)
+        }
+    }
+
     suspend fun delete(note: Note) {
         noteDao.delete(note)
+    }
+
+    suspend fun deleteMultipleNotes(selectedNotes: List<Note>) {
+        for (note in selectedNotes) {
+            noteDao.delete(note)
+        }
     }
 
     suspend fun update(note: Note) {

@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="200" height="200" src="app/src/main/res/mipmap-xhdpi/ic_launcher.png">
+  <img width="200" height="200" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png">
   <h1>Noteflex</h1>
 <p>Notes app for Android.</p></div>
 
@@ -14,16 +14,16 @@ its versatility ensures that it caters to a wide range of needs and requirements
 ## Screenshots
 
 <p float="left">
-  <img src="screenshots/add_notes_screen.jpg" width="200"/>
   <img src="screenshots/home_screen.jpg" width="200"/>
+  <img src="screenshots/home_screen2.jpg" width="200"/>
+  <img src="screenshots/add_notes_screen.jpg" width="200"/>
 </p>
 
 ## Development Setup
 
 Before you begin, you should have already downloaded the Android Studio SDK and set it up correctly.
 You can find a guide on how to do this
-here: [Setting up Android Studio](http://developer.android.com/sdk/installing/index.html?pkg=studio)
-.
+here:[Setting up Android Studio](http://developer.android.com/sdk/installing/index.html?pkg=studio).
 
 ## Building the Code
 

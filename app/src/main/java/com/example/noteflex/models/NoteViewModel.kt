@@ -8,6 +8,7 @@ import com.example.noteflex.database.NoteDatabase
 import com.example.noteflex.database.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,9 +24,24 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     fun insertNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(note)
     }
+    fun insertMultipleNotes(selectedNotes: List<Note>) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.insertMultipleNotes(selectedNotes)
+            }
+        }
+    }
 
     fun deleteNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(note)
+    }
+
+    fun deleteMultipleNotes(selectedNotes: List<Note>) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteMultipleNotes(selectedNotes)
+            }
+        }
     }
 
     fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
