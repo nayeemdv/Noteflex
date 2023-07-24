@@ -59,10 +59,11 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesClickListener {
             createNote.launch(intent)
         }
 
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+        binding.toolbar2.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.delete_top_menu -> {
                     deleteSelectedNotes()
+                    topBarMenu(0)
                     true
                 }
 
@@ -127,13 +128,16 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesClickListener {
 
     private fun topBarMenu(count: Int) {
         if (count == 0) {
-            binding.toolbarHomeMenu.visibility = View.VISIBLE
-            binding.toolbar.menu.clear()
+            window.statusBarColor = getColor(R.color.transparent)
+            binding.toolbar2.visibility = View.GONE
+            binding.toolbar.visibility = View.VISIBLE
         } else if (count == 1 && previousCount != 2) {
-            binding.toolbarHomeMenu.visibility = View.GONE
-            binding.toolbar.inflateMenu(R.menu.top_bar_menu)
+            window.statusBarColor = getColor(R.color.colorPrimary)
+            binding.toolbar.visibility = View.GONE
+            binding.toolbar2.visibility = View.VISIBLE
+
         }
-        binding.toolbar.title = count.toString()
+        binding.tvToolbarTitle.text = count.toString()
         previousCount = count
     }
 

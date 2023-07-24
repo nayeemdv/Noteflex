@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="iconColor">#626363</color>
-    <color name="transparent">#52FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="border_default">#BBBCBD</color>
     <color name="border_selected">#3552F4</color>
     <color name="colorPrimary">#F2F5FC</color>
